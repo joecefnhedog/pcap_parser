@@ -27,9 +27,8 @@ the lat 4 values 01 00 00 00 (0x1) which indicates that the link-layer protocol 
 
 
 so using the hexdump program from the linux shell, we can see the first 24 bytes;
-
-'''
-$ hexdump -n 24 -C mdf-kospi200.20110216-0.pcap | cut -c 11-59
+```console
+foo@bar:~$ hexdump -n 24 -C mdf-kospi200.20110216-0.pcap | cut -c 11-59
 d4 c3 b2 a1 02 00 04 00  00 00 00 00 00 00 00 00 
 ff ff 00 00 01 00 00 00       
-'''
+```
