@@ -1,7 +1,7 @@
 # pcap_parser
 Using Haskell to design a parser which is efficient in time and space.
-
-The PCAP file has the general structure
+It is useful to give some notes on the structure of the Pcap file, which is often read in network analysing tools  such as wireshark. They ontain data coming drom packets.
+So the PCAP file has the general structure
 
 (Global Header) | (Header1) | Data1 | (Header2) | Data2 | ... | (HeaderN) | DataN
 (..) terms are added by libpcap/capture software,
@@ -27,6 +27,7 @@ the lat 4 values 01 00 00 00 (0x1) which indicates that the link-layer protocol 
 
 
 so using the hexdump program from the linux shell, we can see the first 24 bytes;
+
 '''
 $ hexdump -n 24 -C mdf-kospi200.20110216-0.pcap | cut -c 11-59
 d4 c3 b2 a1 02 00 04 00  00 00 00 00 00 00 00 00 
