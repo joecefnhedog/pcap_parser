@@ -16,13 +16,14 @@ data Header = Header { magic :: Strict.ByteString
                      } deriving (Show)
 
 data Bids = Bids  
-  {priceBid :: !Strict.ByteString, qtyBid :: !Strict.ByteString}  
+  {priceBid :: !Int, qtyBid :: !Strict.ByteString}  
   deriving (Show)
 
-toTime (h1:h2:m1:m2:s1:s2:u1:u2) = h1
+
 
 data TradeJoe = Nada | TradeJoe
-  { quoteAccept :: !Strict.ByteString
+  { packetTime :: !Int
+  , quoteAccept :: !Strict.ByteString
   , issueCode      :: !Strict.ByteString
   , bids     :: ![Bids]
   , asks       :: ![Bids]
@@ -46,7 +47,7 @@ getTestByteString = do
   test <- getByteString (58+212+58+215+58+215+58+215+58+258)
   rest <- getRemainingLazyByteString
   return (test,rest)
-
+{--
 getTradeJoe2 :: Get TradeJoe
 getTradeJoe2 = do
   --skip 58
@@ -62,9 +63,11 @@ getTradeJoe2 = do
   quoteAccept <- getByteString 8
   skip 1
   return $! TradeJoe quoteAccept issueCode bids asks 
-
+--}
 getTradeJoe3 = do
-   skip 12 --skip the first 12 from the pre packet part, (pre packet is 58 in length)
+   secondsFrom <- (fromIntegral <$> getWord32le) -- the number of seconds since unix time.
+   microSecs   <- (fromIntegral <$> getWord32le) -- followed by microseconds 
+   skip 4 --skip the first 4 from the pre packet part, (pre packet is 58 in length)
    packetLen <- (fromIntegral <$> getWord32le) --getting the packet size(<$>) :: Functor f => (a->b) -> f a -> f b
    skip (58-12-4)
    if ((packetLen-42) == 215)
@@ -76,9 +79,9 @@ getTradeJoe3 = do
      skip 7
      asks <- replicateM 5 getX
      skip (5 + 5*4 + 5 + 5*4)
-     quoteAccept <- (toTime <$> (getByteString 8))
+     quoteAccept <- (getByteString 8)
      skip 1
-     return $! TradeJoe quoteAccept issueCode bids asks
+     return $! TradeJoe secondsFrom quoteAccept issueCode bids asks
      --return $! Nil
      --return $! TradeJoe3 packetLen
      else do
@@ -88,10 +91,10 @@ getTradeJoe3 = do
 
 
 getX = do
-  priceX <- getByteString 5
+  priceX <- (fromIntegral <$> getByteString 5)
   qtyX   <- getByteString 7
   return (Bids priceX qtyX)
-
+{--
 incrementalExampleJoe :: Lazy.ByteString -> [TradeJoe]
 incrementalExampleJoe input0 = gojo decoder input0
   where
@@ -100,7 +103,7 @@ incrementalExampleJoe input0 = gojo decoder input0
     gojo (Done leftover _consumed trade) input =      trade : gojo decoder (LI.chunk leftover input)
     gojo (Partial k) input                     =      gojo (k . takeHeadChunk $ input) (dropHeadChunk input)
     gojo (Fail leftover _consumed msg) input =      error msg
-  
+--}  
 incrementalExampleJoe3 :: Lazy.ByteString -> [TradeJoe]
 incrementalExampleJoe3 input0 = gojo decoder input0
   where

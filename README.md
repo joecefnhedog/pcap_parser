@@ -1,5 +1,6 @@
 # pcap_parser
 Using Haskell to design a parser which is efficient in time and space.
+
 It is useful to give some notes on the structure of the Pcap file, which is often read in network analysing tools  such as wireshark. They ontain data coming drom packets.
 So the PCAP file has the general structure
 
@@ -32,3 +33,9 @@ foo@bar:~$ hexdump -n 24 -C mdf-kospi200.20110216-0.pcap | cut -c 11-59
 d4 c3 b2 a1 02 00 04 00  00 00 00 00 00 00 00 00 
 ff ff 00 00 01 00 00 00       
 ```
+the timestanp for the packet comes from
+https://www.elvidence.com.au/understanding-time-stamps-in-packet-capture-data-pcap-files/
+
+
+Then we need to place the bids and asks in reverse order.
+
