@@ -37,5 +37,5 @@ the timestanp for the packet comes from
 https://www.elvidence.com.au/understanding-time-stamps-in-packet-capture-data-pcap-files/
 
 
-Then we need to place the bids and asks in reverse order.
+Then we need to place the bids and asks in reverse order. and convert the prices to readable format.
 
