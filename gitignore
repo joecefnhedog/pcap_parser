@@ -31,4 +31,9 @@ someOtherfoler/
 *.hi
 *.exe
 *.hs#
+*.o
+*.hp
+*.aux
+*.ps
+*.prof
 
