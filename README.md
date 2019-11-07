@@ -1,7 +1,9 @@
-# pcap_parser
-Using Haskell to design a parser which is efficient in time and space.
+# Designing a PCAP file parser in Haskell
+Using Haskell to design a parser which is efficient in time and space. The file is read in chunks to allow large files to be read easily without encountering memory errors.
 
-It is useful to give some notes on the structure of the Pcap file, which is often read in network analysing tools  such as wireshark. They ontain data coming drom packets.
+
+## Notes on PCAP files.
+It is useful to give some notes on the structure of the PCAP file, which is often read in network analysing tools  such as wireshark. They ontain data coming drom packets.
 So the PCAP file has the general structure
 
 (Global Header) | (Header1) | Data1 | (Header2) | Data2 | ... | (HeaderN) | DataN

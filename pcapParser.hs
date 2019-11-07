@@ -16,7 +16,7 @@ data Header = Header { magic :: Strict.ByteString
                      } deriving (Show)
 
 data Bids = Bids  
-  {priceBid :: !Int, qtyBid :: !Strict.ByteString}  
+  {priceBid :: !Strict.ByteString, qtyBid :: !Strict.ByteString}  
   deriving (Show)
 
 
@@ -91,7 +91,7 @@ getTradeJoe3 = do
 
 
 getX = do
-  priceX <- (fromIntegral <$> getByteString 5)
+  priceX <- getByteString 5
   qtyX   <- getByteString 7
   return (Bids priceX qtyX)
 {--
