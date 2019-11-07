@@ -41,3 +41,17 @@ https://www.elvidence.com.au/understanding-time-stamps-in-packet-capture-data-pc
 
 Then we need to place the bids and asks in reverse order. and convert the prices to readable format.
 
+# Running the code
+A few ways this can be done.
+Using GHCI, so navigate to the directory of the files, then run:
+```
+ghci
+```
+then
+```
+:l pcapParser.hs
+```
+then run main
+'''
+main
+'''
