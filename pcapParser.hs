@@ -7,6 +7,7 @@ import qualified Data.ByteString.Lazy.Char8 as Lazy
 import qualified Data.ByteString.Lazy.Internal as LI
 import qualified Data.ByteString.Lazy as L
 
+
 data Header = Header { magic :: Strict.ByteString
                      , version :: Strict.ByteString
                      , timezone :: Strict.ByteString
@@ -47,23 +48,7 @@ getTestByteString = do
   test <- getByteString (58+212+58+215+58+215+58+215+58+258)
   rest <- getRemainingLazyByteString
   return (test,rest)
-{--
-getTradeJoe2 :: Get TradeJoe
-getTradeJoe2 = do
-  --skip 58
-  skip 12
-  packetLength <- getWord32le
-  skip 5
-  issueCode <- getByteString 12
-  skip 12
-  bids <- replicateM 5 getX
-  skip 7
-  asks <- replicateM 5 getX
-  skip (5 + 5*4 + 5 + 5*4)
-  quoteAccept <- getByteString 8
-  skip 1
-  return $! TradeJoe quoteAccept issueCode bids asks 
---}
+
 getTradeJoe3 = do
    secondsFrom <- (fromIntegral <$> getWord32le) -- the number of seconds since unix time.
    microSecs   <- (fromIntegral <$> getWord32le) -- followed by microseconds 
@@ -94,16 +79,7 @@ getX = do
   priceX <- getByteString 5
   qtyX   <- getByteString 7
   return (Bids priceX qtyX)
-{--
-incrementalExampleJoe :: Lazy.ByteString -> [TradeJoe]
-incrementalExampleJoe input0 = gojo decoder input0
-  where
-    decoder = runGetIncremental getTradeJoe2
-    gojo :: Decoder TradeJoe -> Lazy.ByteString -> [TradeJoe]
-    gojo (Done leftover _consumed trade) input =      trade : gojo decoder (LI.chunk leftover input)
-    gojo (Partial k) input                     =      gojo (k . takeHeadChunk $ input) (dropHeadChunk input)
-    gojo (Fail leftover _consumed msg) input =      error msg
---}  
+
 incrementalExampleJoe3 :: Lazy.ByteString -> [TradeJoe]
 incrementalExampleJoe3 input0 = gojo decoder input0
   where

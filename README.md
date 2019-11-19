@@ -1,10 +1,10 @@
-# Designing a PCAP file parser in Haskell
+# Designing a PCAP file parser in Haskell.
 Using Haskell to design a parser which is efficient in time and space. The file is read in chunks to allow large files to be read easily without encountering memory errors.
 
 
 ## Notes on PCAP files.
-It is useful to give some notes on the structure of the PCAP file, which is often read in network analysing tools  such as wireshark. They ontain data coming drom packets.
-So the PCAP file has the general structure
+It is useful to give some notes on the structure of the PCAP file, which is often read in network analysing tools such as wireshark. They contain data coming drom packets.
+###So the PCAP file has the general structure
 
 (Global Header) | (Header1) | Data1 | (Header2) | Data2 | ... | (HeaderN) | DataN
 (..) terms are added by libpcap/capture software,
@@ -18,28 +18,27 @@ The next 4 bytes 02 00 04 00 correspond to the version of the program, so V2.4 -
 
 here 2 is written on two bytes as 0x0200 and not 0x0002. This is due to little endianess in which the least-significant-byte is stored in the least significant position.
 
-This means that 2 would be witten on two bytes as 02 00. This is distinguished from big-endianess by the `magic-number' 
+This means that 2 would be witten on two bytes as 02 00. This is distinguished from big-endianess by the `magic-number'. 
 
-the real value is 0xa1b2c3d4, where we have the reverse so that means we are working in little endianess (Little E).
+The real value is 0xa1b2c3d4, where we have the reverse so that means we are working in little endianess (Little E).
 
-then we have the GMT timezone ofset minus the timezone used in the headers in seconds (four bytes).
-these are set to zero most of the time, which gives the (00 00 00 00 00 00 00 00).
+Then we have the GMT timezone ofset minus the timezone used in the headers in seconds (four bytes).
+These are set to zero most of the time, which gives (00 00 00 00 00 00 00 00).
 Then the snapshot time which is set to (ff ff 00 00), this is the default value for tcpdumb and wireshark.
 
-the lat 4 values 01 00 00 00 (0x1) which indicates that the link-layer protocol is ethernet.
+The lat 4 values 01 00 00 00 (0x1) which indicates that the link-layer protocol is ethernet.
 
 
-so using the hexdump program from the linux shell, we can see the first 24 bytes;
+It is possible to view this using the hexdump program from the linux shell, we can see the first 24 bytes;
 ```console
 foo@bar:~$ hexdump -n 24 -C mdf-kospi200.20110216-0.pcap | cut -c 11-59
 d4 c3 b2 a1 02 00 04 00  00 00 00 00 00 00 00 00 
 ff ff 00 00 01 00 00 00       
 ```
-the timestanp for the packet comes from
+Where the timestanp for the packet comes from
 https://www.elvidence.com.au/understanding-time-stamps-in-packet-capture-data-pcap-files/
 
-
-Then we need to place the bids and asks in reverse order. and convert the prices to readable format.
+Then we need to place the bids and asks in reverse order and convert the prices to readable format.
 
 # Running the code
 A few ways this can be done.
@@ -52,6 +51,6 @@ then
 :l pcapParser.hs
 ```
 then run main
-'''
+```
 main
-'''
+```
